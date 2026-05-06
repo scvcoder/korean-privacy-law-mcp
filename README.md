@@ -16,6 +16,8 @@
 
 [English](./README-EN.md)
 
+![Korean Privacy Law MCP 데모](./demo.png)
+
 ---
 
 ## 만든 이유
