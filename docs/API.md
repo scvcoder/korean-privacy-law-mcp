@@ -310,5 +310,4 @@ verify_pipa_citation(citation="개인정보 보호법 §28-2", as_of="20200601")
 ## 관련 문서
 
 - [README.md](../README.md) — 시작 가이드
-- [CLAUDE_DESKTOP.md](./CLAUDE_DESKTOP.md) — Claude Desktop 단계별 설정 + 트러블슈팅
 - [CLAUDE.md](../CLAUDE.md) — 프로젝트 정체성·아키텍처·법제처 OPEN API 매핑 (개발자 onboarding)

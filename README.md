@@ -180,8 +180,6 @@ npm run build
 
 또는 프로젝트 루트의 `.env` 파일에 `LAW_OC=...` 작성하면 자동 로드 — `env` 블록 생략 가능.
 
-> Claude Desktop 단계별 상세 + 트러블슈팅: [`docs/CLAUDE_DESKTOP.md`](./docs/CLAUDE_DESKTOP.md)
-
 앱을 재시작하면 완료!
 
 ### API 키 전달 방법 정리
@@ -304,9 +302,7 @@ AI 가 답변에서 인용한 법 조문이 *실제로 존재하는지*, 또는 
 
 | 변수 | 필수 | 용도 |
 |------|------|------|
-| `LAW_OC` | ✅ | 법제처 OPEN API 인증키 (Layer A 31개 도구가 사용. Layer B+/C/Validator 도 시점 검증·primitive 호출 시 동일 키 사용) |
-
-`.env` 파일을 프로젝트 루트에 두면 자동 로드. Claude Desktop 처럼 임의 cwd 로 spawn 되는 경우에도 스크립트 디렉터리 기준 `../.env` 까지 자동 탐색. 그래도 못 찾으면 stderr 에 경고만 출력 (서버는 기동 — Layer C RAG 검색 등 일부 동작은 키 없이도 가능).
+| `LAW_OC` | ✅ | 법제처 OPEN API 인증키 |
 
 전체 변수 + 예시: [`.env.example`](./.env.example).
 
@@ -317,11 +313,9 @@ AI 가 답변에서 인용한 법 조문이 *실제로 존재하는지*, 또는 
 | 문서 | 설명 |
 |------|------|
 | [`README.md`](./README.md) | 본 문서 |
-| [`docs/CLAUDE_DESKTOP.md`](./docs/CLAUDE_DESKTOP.md) | Claude Desktop 단계별 설정 가이드 (트러블슈팅 8개 케이스 포함) |
 | [`docs/API.md`](./docs/API.md) | 37개 도구 상세 레퍼런스 (이름·파라미터·예시) |
-| [`CLAUDE.md`](./CLAUDE.md) | 프로젝트 정체성·아키텍처·도구 인벤토리·법제처 OPEN API 매핑 (개발자 onboarding) |
 | [`LICENSE`](./LICENSE) | MIT |
-| [`data/hf_dataset/LICENSE.md`](./data/hf_dataset/LICENSE.md) | RAG 코퍼스 attribution 라이선스 (pipc-attribution) |
+| [`data/hf_dataset/LICENSE.md`](./data/hf_dataset/LICENSE.md) | RAG 데이터의 원자료 출처 표시 |
 
 ---
 

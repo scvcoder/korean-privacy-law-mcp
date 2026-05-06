@@ -184,8 +184,6 @@ data/
 tests/
   client/ · lib/ · tools/ · integration/ · regression/
   server.test.ts · smoke.test.ts
-docs/
-  CLAUDE_DESKTOP.md              사용자용 단계별 설정 가이드
 README.md                        설치·인증·사용 + 라이선스
 LICENSE                          MIT
 ```
