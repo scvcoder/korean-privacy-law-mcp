@@ -76,7 +76,7 @@
 
 > 아래 모든 예시의 `your-api-key-here` 는 placeholder — 본인 발급 키로 교체하세요. ([`.env.example`](./.env.example) 와 동일 컨벤션)
 
-### 방법 1: Claude.ai 웹에서 바로 사용 (설치 없음) 가장 간편
+### 방법 1: Claude.ai 웹 및 Claude 데스크탑 앱 에서 바로 사용 (설치 없음) 가장 간편
 
 [claude.ai](https://claude.ai) 에서 커스텀 커넥터 추가. Claude Pro/Max/Team/Enterprise 요금제 필요 (Free 는 커넥터 1개만 가능).
 
@@ -104,31 +104,7 @@
 
 > Hugging Face 원격 서버는 운영자(scvcoder) 가 무료로 제공하는 베스트 에포트 서비스 — 동작 보장 없음. 서버가 죽지 않도록 최선을 다해 보겠습니다.
 
-### 방법 2: AI 데스크톱 앱에서 사용 (Claude Desktop · Cursor · Windsurf)
-
-설정 파일에 아래 내용 추가 (`your-api-key-here` 는 본인 키로 교체):
-
-```json
-{
-  "mcpServers": {
-    "korean-privacy-law": {
-      "url": "https://scvcoder-korean-privacy-law-mcp.hf.space/mcp?oc=your-api-key-here"
-    }
-  }
-}
-```
-
-**설정 파일 위치**:
-
-| 앱 | macOS | Windows |
-|---|---|---|
-| Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` | `%APPDATA%\Claude\claude_desktop_config.json` |
-| Cursor | `<프로젝트>/.cursor/mcp.json` | `<프로젝트>/.cursor/mcp.json` |
-| Windsurf | `<프로젝트>/.windsurf/mcp.json` | `<프로젝트>/.windsurf/mcp.json` |
-
-이미 다른 MCP 서버가 설정되어 있다면 `"mcpServers": { ... }` 안에 `"korean-privacy-law": { ... }` 부분만 추가. 저장 후 앱 재시작.
-
-### 방법 3: 내 컴퓨터에 직접 설치 (오프라인 가능)
+### 방법 2: 내 컴퓨터에 직접 설치 (오프라인 가능)
 
 인터넷 없이 쓰고 싶거나, 원격 서버를 거치지 않으려면 직접 설치할 수 있습니다.
 
@@ -214,9 +190,9 @@ npm run build
 
 | 방법 | 사용법 | 용도 |
 |------|--------|------|
-| URL 에 포함 | 주소 끝에 `?oc=내키` | 원격 서버 (방법 1·2) — 가장 간편 |
+| URL 에 포함 | 주소 끝에 `?oc=내키` | 원격 서버 (방법 1) — 가장 간편 |
 | HTTP 헤더 | `apikey: 내키` 또는 `x-law-oc: 내키` | 원격 서버 — 프로그래밍 연동 |
-| 설정 파일 env 블록 | `"env": { "LAW_OC": "내키" }` | 로컬 설치 (방법 3) 표준 |
+| 설정 파일 env 블록 | `"env": { "LAW_OC": "내키" }` | 로컬 설치 (방법 2) 표준 |
 | 셸 환경변수 | `export LAW_OC=내키` (~/.zshrc 등) | 시스템 전역 적용 |
 | `.env` 파일 | 프로젝트 루트에 `LAW_OC=내키` | 소스 빌드 — 자동 로드 |
 
