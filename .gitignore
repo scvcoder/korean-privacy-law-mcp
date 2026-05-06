@@ -1,0 +1,26 @@
+node_modules/
+dist/
+coverage/
+
+# 환경변수 (LAW_OC 등 secret)
+.env
+.env.local
+.env.*.local
+
+# 작업 디렉터리
+tmp/
+
+# 개발 노트 (commit 대상 아님)
+TEST_REPORT.md
+PLAN.md
+
+# 로그·OS·IDE
+*.log
+.DS_Store
+.idea/
+.vscode/
+.cursor/
+
+# 빌드 산출물
+*.tsbuildinfo
+
