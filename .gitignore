@@ -15,6 +15,7 @@ TEST_REPORT.md
 PLAN.md
 docs/HUGGINGFACE.md
 docs/CLAUDE_DESKTOP.md
+huggingface/
 
 # 로그·OS·IDE
 *.log
