@@ -30,32 +30,22 @@
 
 ---
 
-## v0.8 — 개인정보보호법과 관련법령 그리고 가이드와 상담사례를 한 번에
+## v0.8.0 — 개인정보보호법과 관련법령 그리고 가이드와 상담사례를 한 번에
 
 법제처 OPEN API 31개 wrapper 위에 **PIPC 공식 출처 인덱스 2개 + 가이드·상담사례 RAG 3개 + 4계층 환각 검증 1개** — 총 37개 도구가 한국 법령 정보 + PIPC 공식 자료를 자연어로 검색·비교·분석.
 
 ### 주요 개발 사항
 
-- **PIPC 공식 RAG 코퍼스 2,202 청크** — 법제처 API 가 못 가진 실무 자료. 4종 가이드 457청크 (질의응답 99 + 소상공인 41 + CCTV 71 + 분야별 안내서 246) + 개인정보 포털 상담사례 1,745건. Anthropic Contextual Retrieval 적용. 부팅 시 BM25 인덱스 메모리 빌드 (한국어 토크나이저, prefix + fuzzy 0.2).
-- **PIPC 공식 출처 인덱스화 (큐레이션 0)** — 「분야별 개인정보 보호 안내서」(PIPC, 2024.12) 8개 분야 정형 표 + 개인정보 포털 (privacy.go.kr/contsNo=116·117) 12 법령·23 행정규칙 lookup. 우리 의견·매핑 0 — PIPC 공식 표·portal list 그대로. 모든 응답에 출처·페이지·발간일·"추가 검토 필수" 면책 자동 첨부.
-- **4계층 위임 추적** — `get_three_tier`(법-시행령-시행규칙) + `get_delegated_laws` + 행정규칙 검색을 묶어 PIPA 조문 → PIPC 고시까지의 위임 경로를 자연어 한 줄로 추적.
-- **시점 분기 처리** — `get_historical_law`·`get_article_change_history`·`get_law_history` 로 정통망법 → PIPA 흡수 시점, 개정 전후 본문, 옛 조문 인용 검증.
-- **PIPC 의결례 검색·계단식 축약** — 1만자+ 평균 의결문 본문을 앞 800자 + 중략 + 뒤 400자로 축약. case-sensitive 응답 quirk (`<Ppc>` vs `<ppc>`) 처리.
-- **4계층 환각 검증** — `verify_pipa_citation` 이 법령명 → 조 → 항 → 호·목 순서로 인용 검증. 환각 시 `[HALLUCINATION_DETECTED]` + 단계별 ✗ + 다음 도구 안내. `as_of` YYYYMMDD 로 시점별 본문 검증 (예: 2019년 정통망법 §22 가 그 시점에 유효했는지).
-- **응답 baseline 표준화** — `[NOT_FOUND]` / `[HALLUCINATION_DETECTED]` / `[OUT_OF_SCOPE]` / `[NOT_FOUND_SCOPE]` 4종 머신 파싱 마커 + 정규 URL (`📎 출처: ...`) + 다음 도구 후보 자동 첨부 (체인 없이도 LLM 이 자연스럽게 이어감).
-- **법령 약칭 17종 자동 인식** — `PIPA`·`개보법`·`정통망법`·`신정법`·`위치정보법`·`통비법`·`정보공개법`·`전자정부법` 등. 법제처 lsAbrv 사전이 도메인 약칭 거의 미수록이라 PRIVACY_ALIASES 가 보완.
+- **법제처 OpenAPI 활용 도구 37개 개발**
+  - 개인정보보호법 및 관련법령 검색·본문·구조, 개인정보보호위원회 결정문 등 조회, 의료법 등 특별법 조회 등
+- **개인정보 포털 가이드 및 상담사례 RAG 실무 데이터 강화**
+  - 법제처 API 가 못 가진 실무 자료. 4종 가이드 457청크 (질의응답 99 + 소상공인 41 + CCTV 71 + 분야별 안내서 246) + 개인정보 포털 상담사례 1,745건.
 
 ### 예시 — 자연어 한 줄로 도메인 깊이까지
 
 ```
 "의료기관에서 환자 개인정보 처리할 때 어떤 법이 우선이야?"
 ```
-
-→ AI 가 자연어 질의를 받으면 자동으로 다음을 수행:
-
-- `get_sectoral_related_laws("의료기관")` — PIPC 분야별 안내서 공식 표 lookup
-- `official_laws` (PIPC 공식 분류) + `additional_mentions` (본문 빈도 통계) 분리 출력
-- lex specialis 원칙 PIPC 직접 인용 + 출처·페이지·발간일 + "추가 검토 필수" 면책 자동 첨부
 
 결과 예시:
 
@@ -64,12 +54,6 @@
 ```
 "개인정보 보호법 §28-2 가명정보 처리 조항이 2020년 6월 시점에 유효했어?"
 ```
-
-→ AI 가 자연어 질의를 받으면 자동으로 다음을 수행:
-
-- `verify_pipa_citation(citation="개인정보 보호법 §28-2", as_of="20200601")` 호출
-- `efYd` 시점별 본문 조회로 4계층 (법령 → 조 → 항 → 호·목) 단계별 검증
-- 성공 시 ✅ + 4계층 ✓ + mst·lawId + 정규 URL / 환각 시 `[HALLUCINATION_DETECTED]` + 단계별 ✗
 
 결과 예시:
 
@@ -118,7 +102,7 @@
 "PIPC 가 동의 없는 마케팅 문자 발송에 어떻게 의결했어?"          → PIPC 의결례
 ```
 
-> Hugging Face 원격 서버는 운영자(scvcoder) 가 무료로 제공하는 베스트 에포트 서비스 — 동작 보장 없음. 본인 운영용으로 직접 배포하려면 [`docs/HUGGINGFACE.md`](./docs/HUGGINGFACE.md) 참고 (Pro 구독 + 5분 소요).
+> Hugging Face 원격 서버는 운영자(scvcoder) 가 무료로 제공하는 베스트 에포트 서비스 — 동작 보장 없음. 서버가 죽지 않도록 최선을 다해 보겠습니다.
 
 ### 방법 2: AI 데스크톱 앱에서 사용 (Claude Desktop · Cursor · Windsurf)
 
@@ -358,7 +342,6 @@ AI 가 답변에서 인용한 법 조문이 *실제로 존재하는지*, 또는 
 |------|------|
 | [`README.md`](./README.md) | 본 문서 |
 | [`docs/CLAUDE_DESKTOP.md`](./docs/CLAUDE_DESKTOP.md) | Claude Desktop 단계별 설정 가이드 (트러블슈팅 8개 케이스 포함) |
-| [`docs/HUGGINGFACE.md`](./docs/HUGGINGFACE.md) | Hugging Face Spaces 배포 가이드 (원격 MCP 서버 운영) |
 | [`docs/API.md`](./docs/API.md) | 37개 도구 상세 레퍼런스 (이름·파라미터·예시) |
 | [`CLAUDE.md`](./CLAUDE.md) | 프로젝트 정체성·아키텍처·도구 인벤토리·법제처 OPEN API 매핑 (개발자 onboarding) |
 | [`LICENSE`](./LICENSE) | MIT |

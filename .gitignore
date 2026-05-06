@@ -13,6 +13,7 @@ tmp/
 # 개발 노트 (commit 대상 아님)
 TEST_REPORT.md
 PLAN.md
+docs/HUGGINGFACE.md
 
 # 로그·OS·IDE
 *.log
