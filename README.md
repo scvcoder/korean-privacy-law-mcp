@@ -78,7 +78,7 @@
 
 ### 사전 준비 2: Node.js 설치 (권장)
 
-- **로컬 MCP 서버 사용 시** (방법 1·3) — Node.js 설치 필요 (**Node.js 20 이상**)
+- **로컬 MCP 서버 사용 시** (방법 1) — Node.js 설치 필요 (**Node.js 20 이상**)
   → 설치는 귀찮지만 안정적 답변 + 속도 빠름
 - **원격 MCP 서버 사용 시** (방법 2 — Claude.ai 웹) — Node.js 불필요
   → 하지만 속도가 느릴 수 있음
@@ -156,33 +156,6 @@ https://claude.ai/ 에서 커스텀 커넥터 추가.
 
 > ⚠️ **주의사항**: Claude Desktop 에서는 커스텀 커넥터로 추가 시 동작 중 오류가 발생합니다. Claude Desktop 은 반드시 [방법 1](#method-1) 로 추가해야 합니다.
 
-### 방법 3: Claude Desktop 에 수동 설치 (npm, 안정적)
-
-방법 1 의 `npx` 설치 시 로컬에 설치한 것과 유사함. `npx` 설치하기 싫고 `npm` 으로 설치하고 싶다면 아래 명령어로 설치 후 설정 파일을 수동으로 수정.
-
-```bash
-npm install -g korean-privacy-law-mcp
-```
-
-설정 파일 (방법 1 과 같은 위치) 에 아래 추가:
-
-```json
-{
-  "mcpServers": {
-    "korean-privacy-law": {
-      "command": "korean-privacy-law-mcp",
-      "env": {
-        "LAW_OC": "your-api-key-here"
-      }
-    }
-  }
-}
-```
-
-저장 → Claude Desktop **완전 종료 → 재실행**.
-
-npm 최신 버전 설치 명령어로 갱신.
-
 ### API 키 전달 방법 정리
 
 여러 방법으로 인증키를 전달할 수 있습니다. 위에서부터 우선 적용됩니다:
@@ -191,7 +164,7 @@ npm 최신 버전 설치 명령어로 갱신.
 |------|--------|------|
 | URL 에 포함 | 주소 끝에 `?oc=내키` | 원격 서버 (방법 2) — 가장 간편 |
 | HTTP 헤더 | `apikey: 내키` 또는 `x-law-oc: 내키` | 원격 서버 — 프로그래밍 연동 |
-| 설정 파일 env 블록 | `"env": { "LAW_OC": "내키" }` | 로컬 설치 (방법 1·3) 표준 |
+| 설정 파일 env 블록 | `"env": { "LAW_OC": "내키" }` | 로컬 설치 (방법 1) 표준 |
 | 셸 환경변수 | `export LAW_OC=내키` (~/.zshrc 등) | 시스템 전역 적용 |
 
 ---
