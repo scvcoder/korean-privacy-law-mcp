@@ -7,6 +7,24 @@
 
 ---
 
+## [0.8.3] - 2026-05-10
+
+> **버전 표기 동기화 + setup 완료 메시지 정리**: `SERVER_VERSION` 이 0.0.1 로 고정돼 있던 stale 이슈를 package.json 동적 로드로 해결. setup 완료 메시지에 실제 설치 버전 노출.
+
+### Fixed
+
+- **`SERVER_VERSION` stale 해소** ([src/server.ts](./src/server.ts)) — 이전엔 `"0.0.1"` 하드코딩 → MCP 클라이언트 server info, stdio 서버 startup 로그가 모두 잘못된 버전 표시. 이제 `package.json` 을 런타임에 읽어 자동 동기화 (npm publish 마다 별도 작업 불필요).
+
+### Changed
+
+- **setup 완료 메시지 단순화** ([src/scripts/setup.ts](./src/scripts/setup.ts)) — 모드별 (로컬/원격) 안내 분기 제거. 대신 `vX.Y.Z 버전으로 설치가 완료되었습니다.` + 재시작 안내 두 줄로. 버전은 `package.json` 동적 로드.
+
+### Internal
+
+- `tests/smoke.test.ts` — server version assertion 도 `package.json` 동적 로드로 변경 (이전엔 `"0.0.1"` 하드코딩).
+
+---
+
 ## [0.8.2] - 2026-05-10
 
 > **setup wizard 입력 검증 강화 + 문구 다듬기**: 미감지 클라이언트 선택을 거부해 의미 없는 빈 config 파일 생성을 차단. 배너·운영 모드·완료 메시지 문구를 사용자 관점에서 간결화.

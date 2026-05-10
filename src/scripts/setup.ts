@@ -19,11 +19,25 @@
 
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
+
+/** 패키지 버전을 package.json 에서 동적으로 읽음 — npm publish 마다 자동 동기화 */
+function readPackageVersion(): string {
+  try {
+    // dist/scripts/setup.js → ../../package.json (패키지 루트)
+    const here = fileURLToPath(import.meta.url);
+    const pkgPath = resolve(dirname(here), "..", "..", "package.json");
+    const raw = readFileSync(pkgPath, "utf-8");
+    const pkg = JSON.parse(raw) as { version?: string };
+    return pkg.version ?? "?";
+  } catch {
+    return "?";
+  }
+}
 
 const REMOTE_URL = "https://scvcoder-korean-privacy-law-mcp.hf.space/mcp";
 const SERVER_NAME = "korean-privacy-law";
@@ -172,16 +186,6 @@ function detectLocalBuild(): string | null {
   const here = fileURLToPath(import.meta.url);
   const indexPath = resolve(dirname(here), "..", "index.js");
   return existsSync(indexPath) ? indexPath : null;
-}
-
-/**
- * 현재 실행 위치로부터 설치 방식 추측 — 완료 메시지에 적합한 갱신 명령 표기.
- */
-function detectInstallMethod(): "npx" | "global" | "dev" {
-  const here = fileURLToPath(import.meta.url);
-  if (here.includes("/.npm/_npx/")) return "npx";
-  if (here.includes("/lib/node_modules/")) return "global";
-  return "dev";
 }
 
 // ─────────────────────────────────────────
@@ -363,7 +367,7 @@ export async function runSetup(): Promise<void> {
   }
 }
 
-function printComplete(mode: InstallMode): void {
+function printComplete(_mode: InstallMode): void {
   console.log();
   console.log(`  ${c.green}${c.bold}╔${"═".repeat(58)}╗${c.reset}`);
   console.log(
@@ -372,22 +376,8 @@ function printComplete(mode: InstallMode): void {
   console.log(`  ${c.green}${c.bold}╚${"═".repeat(58)}╝${c.reset}`);
   console.log();
 
-  if (mode.type === "local") {
-    const method = detectInstallMethod();
-    const upgradeCmd =
-      method === "npx"
-        ? `npx ${NPM_PACKAGE}@latest setup`
-        : `npm install -g ${NPM_PACKAGE}@latest`;
-    console.log(`  ${c.dim}최신 버전으로 갱신: ${c.bold}${upgradeCmd}${c.reset}`);
-    console.log();
-  } else {
-    console.log(
-      `  ${c.dim}원격 모드 — 운영자(scvcoder) 가 무료로 제공하는 베스트 에포트 서비스.${c.reset}`
-    );
-    console.log(`  ${c.dim}서버가 죽지 않도록 최선을 다해 보겠습니다.${c.reset}`);
-    console.log();
-  }
-
+  const version = readPackageVersion();
+  console.log(`  ${c.dim}v${version} 버전으로 설치가 완료되었습니다.${c.reset}`);
   console.log(
     `  ${c.dim}AI 클라이언트를 ${c.bold}완전 종료 후 재시작${c.reset}${c.dim}하면 ${c.bold}${SERVER_NAME}${c.reset}${c.dim} MCP 서버가 활성화됩니다.${c.reset}`
   );

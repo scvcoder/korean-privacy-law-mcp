@@ -3,6 +3,9 @@
  * 도메인 외 질의 처리: server-level metadata + 각 도구 description으로 LLM에게 범위 알림.
  */
 
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { resolve, dirname } from "node:path";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import {
   CallToolRequestSchema,
@@ -15,7 +18,22 @@ import { formatToolError } from "./lib/errors.js";
 import { notFoundResponse } from "./lib/not-found.js";
 
 export const SERVER_NAME = "korean-privacy-law-mcp";
-export const SERVER_VERSION = "0.0.1";
+
+/** 패키지 버전을 package.json 에서 동적으로 읽음 — npm publish 마다 자동 동기화 */
+function readPackageVersion(): string {
+  try {
+    // dist/server.js → ../package.json (패키지 루트)
+    const here = fileURLToPath(import.meta.url);
+    const pkgPath = resolve(dirname(here), "..", "package.json");
+    const raw = readFileSync(pkgPath, "utf-8");
+    const pkg = JSON.parse(raw) as { version?: string };
+    return pkg.version ?? "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
+
+export const SERVER_VERSION = readPackageVersion();
 export const SERVER_DESCRIPTION =
   "한국 개인정보보호법(PIPA) 전문 MCP. PIPA·시행령·PIPC 고시·의결례·" +
   "공식 가이드·상담사례 + 법제처 전체 API. 일반 법령 조회는 가능하지만 " +

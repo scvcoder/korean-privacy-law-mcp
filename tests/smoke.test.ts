@@ -6,9 +6,13 @@
 import { describe, it, expect, afterAll } from "vitest";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { loadEnv } from "../src/lib/env.js";
+
+const PKG_VERSION = (
+  JSON.parse(readFileSync(resolve("package.json"), "utf-8")) as { version: string }
+).version;
 
 loadEnv();
 const distPath = resolve("dist/index.js");
@@ -42,7 +46,7 @@ describe.skipIf(!built)("MCP server E2E (stdio)", () => {
     const c = await getClient();
     const info = c.getServerVersion();
     expect(info?.name).toBe("korean-privacy-law-mcp");
-    expect(info?.version).toBe("0.0.1");
+    expect(info?.version).toBe(PKG_VERSION);
   }, 15_000);
 
   it("server.instructions → 도메인 명시 포함", async () => {

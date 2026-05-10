@@ -1,6 +1,6 @@
 {
   "name": "korean-privacy-law-mcp",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "한국 개인정보보호법(PIPA) 전문 MCP. PIPA·시행령·PIPC 고시·의결례·공식 가이드·상담사례 + 법제처 전체 API.",
   "type": "module",
   "main": "dist/index.js",
