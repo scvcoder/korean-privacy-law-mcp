@@ -65,7 +65,7 @@
 
 ## 설치 및 사용법
 
-### 0단계: API 키 발급 (무료, 1분)
+### 사전 준비 1: API 키 발급 (무료, 1분)
 
 모든 방법에 공통으로 필요한 **법제처 OPEN API 인증키(OC)** 를 먼저 발급받으세요.
 
@@ -74,90 +74,103 @@
 3. "OPEN API 사용 신청" 버튼 클릭
 4. 신청서 작성 → **인증키(OC)** 발급 (이메일 ID 형식)
 
-> 아래 모든 예시의 `your-api-key-here` 는 placeholder — 본인 발급 키로 교체하세요. ([`.env.example`](./.env.example) 와 동일 컨벤션)
+> 아래 모든 예시의 `your-api-key-here` 는 본인 발급 키로 교체하세요.
 
-### 방법 1: Claude.ai 웹 에서 바로 사용 (설치 없음) 가장 간편
+### 사전 준비 2: Node.js 설치 (권장)
 
-[claude.ai](https://claude.ai) 에서 커스텀 커넥터 추가.
+- **로컬 MCP 서버 사용 시** (방법 1·3) — Node.js 설치 필요 (**Node.js 20 이상**)
+  → 설치는 귀찮지만 안정적 답변 + 속도 빠름
+- **원격 MCP 서버 사용 시** (방법 2 — Claude.ai 웹) — Node.js 불필요
+  → 하지만 cold start 가 느릴 수 있음
 
-**커넥터 추가 방법**:
+**macOS:**
+```bash
+# 옵션 A — Homebrew (권장)
+brew install node
 
-1. claude.ai 로그인
-2. 사이드바 하단 본인 이름 → "설정" → "커넥터"
-3. "커스텀 커넥터" 영역 → "커스텀 커넥터 추가"
-4. 아래 입력 (`your-api-key-here` 는 본인 키로 교체):
-   - **이름**: `korean-privacy-law` (자유)
-   - **URL**: `https://scvcoder-korean-privacy-law-mcp.hf.space/mcp?oc=your-api-key-here`
-5. "추가" → 등록 완료
+# 옵션 B — 공식 인스톨러
+# https://nodejs.org/ko/download → LTS 버전 다운로드
+```
+
+**Windows:**
+
+```powershell
+# https://nodejs.org/ko/download 에서 LTS 버전 다운로드
+```
+
+**Linux (Ubuntu / Debian):**
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
+sudo apt install -y nodejs
+```
+
+**확인:**
+```bash
+node --version    # v20.x.x 이상이 떠야 함
+npx --version
+```
+
+<a id="method-1"></a>
+
+### ⭐ 방법 1: Claude Desktop 자동 설치 (npx, 안정적, 권장)
+
+> [!IMPORTANT]
+> Claude Desktop 설정 파일에 아래 한 블록만 추가하면 끝.
+>
+> **설정 파일 위치**:
+> - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+> - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+>
+> ```json
+> {
+>   "mcpServers": {
+>     "korean-privacy-law": {
+>       "command": "npx",
+>       "args": ["-y", "korean-privacy-law-mcp"],
+>       "env": {
+>         "LAW_OC": "your-api-key-here"
+>       }
+>     }
+>   }
+> }
+> ```
+>
+> 저장 → Claude Desktop **완전 종료 (Cmd+Q / Alt+F4, 창 닫기 X) → 재실행**.
+
+`npx -y` 가 매번 npm 캐시를 확인해 새 버전이 출시되면 자동 적용. 별도 업데이트 명령 불필요. Cursor / Windsurf / VS Code MCP 클라이언트도 같은 JSON 형식 — 각자의 설정 파일 위치만 다름.
+
+### ⭐ 방법 2: https://claude.ai/ 웹에서 바로 사용 (간편함)
+
+https://claude.ai/ 에서 커스텀 커넥터 추가.
+
+> [!IMPORTANT]
+> **커넥터 추가 방법**:
+>
+> 1. https://claude.ai/ 로그인
+> 2. 사이드바 하단 본인 이름 → "설정" → "커넥터"
+> 3. "커스텀 커넥터" 영역 → "커스텀 커넥터 추가"
+> 4. 아래 입력 (`your-api-key-here` 는 본인 키로 교체):
+>    - **이름**: `korean-privacy-law` (자유)
+>    - **URL**: `https://scvcoder-korean-privacy-law-mcp.hf.space/mcp?oc=your-api-key-here`
+> 5. "추가" → 등록 완료
+
+<img src="./claude-connector.png" alt="Claude 커스텀 커넥터 등록 화면" width="400">
 
 **도구 활성화 (중요)**: 등록한 커넥터 "구성" 클릭 → 도구 목록에서 **모든 도구를 "항상 사용"** 으로 설정. 매번 승인 없이 AI 가 바로 호출 가능.
 
-이제 채팅에서 자연어로:
+> ⚠️ **주의사항**: Claude Desktop 에서는 커스텀 커넥터로 원격 등록 시 동작 중 오류가 발생합니다 ([anthropics/claude-ai-mcp#211](https://github.com/anthropics/claude-ai-mcp/issues/211) — "Tool result could not be submitted" 배너). Claude Desktop 은 반드시 [방법 1](#method-1) 로 추가하세요.
 
-```
-"개인정보 보호법 제15조 알려줘"                                → 법령 조문 본문
-"의료기관 환자 개인정보 처리할 때 어떤 법이 우선이야?"          → PIPC 분야별 매핑
-"가족 동의 없이 자녀 사진 SNS 에 올리면?"                       → 상담사례 검색
-"개인정보 보호법 §28-2 가 2020년 6월 시점에 유효했어?"           → 인용 조문 시점 검증
-"PIPC 가 동의 없는 마케팅 문자 발송에 어떻게 의결했어?"          → PIPC 의결례
-```
+> Hugging Face 원격 서버는 운영자(scvcoder) 가 무료로 제공하는 베스트 에포트 서비스 — 동작 보장 없음.
 
-> Hugging Face 원격 서버는 운영자(scvcoder) 가 무료로 제공하는 베스트 에포트 서비스 — 동작 보장 없음. 서버가 죽지 않도록 최선을 다해 보겠습니다.
+### 방법 3: Claude Desktop 에 수동 설치 (npm, 안정적)
 
-### 방법 2: AI 데스크톱 앱에서 사용 (Claude Desktop)
-
-**Claude Desktop — `mcp-remote` stdio 브릿지 사용 (권장)**
-
-왜 brigde 가 필요한가: Claude Desktop 의 streamable-HTTP 직접 등록(`"url"` 필드)은 Anthropic 측 알려진 버그 ([anthropics/claude-ai-mcp#211](https://github.com/anthropics/claude-ai-mcp/issues/211)) 로 성공한 도구 호출에도 "Tool result could not be submitted" 배너 가 뜸. `mcp-remote` 가 stdio 로 변환해 이 race 를 우회. Node.js 20+ 필요.
-
-설정 파일 (`~/Library/Application Support/Claude/claude_desktop_config.json` macOS / `%APPDATA%\Claude\claude_desktop_config.json` Windows):
-
-```json
-{
-  "mcpServers": {
-    "korean-privacy-law": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://scvcoder-korean-privacy-law-mcp.hf.space/mcp?oc=your-api-key-here"]
-    }
-  }
-}
-```
-
-저장 → Claude Desktop 완전 종료 (Cmd+Q / Alt+F4, 창 닫기 X) → 재실행.
-
-### 방법 3: 내 컴퓨터에 직접 설치 (오프라인 가능)
-
-인터넷 없이 쓰고 싶거나, 원격 서버를 거치지 않으려면 직접 설치할 수 있습니다.
-
-**사전 준비:** Node.js 버전 18 이상.
-
-**자동 실행 (npx, 추천):**
-
-설정 파일에 아래 내용 추가:
-
-```json
-{
-  "mcpServers": {
-    "korean-privacy-law": {
-      "command": "npx",
-      "args": ["-y", "korean-privacy-law-mcp"],
-      "env": {
-        "LAW_OC": "your-api-key-here"
-      }
-    }
-  }
-}
-```
-
-매번 npm 캐시 확인 — 새 버전 자동 적용.
-
-**글로벌 설치 (부팅 빠름):**
+방법 1 의 `npx` 가 매번 npm 캐시를 확인하는 게 신경 쓰이거나 부팅을 0.5~1초 더 빠르게 하고 싶다면, 글로벌 설치 후 명령을 직접 호출하는 방식.
 
 ```bash
 npm install -g korean-privacy-law-mcp
 ```
 
-설정 파일을 아래로 변경:
+설정 파일 (방법 1 과 같은 위치) 에 아래 추가:
 
 ```json
 {
@@ -172,36 +185,9 @@ npm install -g korean-privacy-law-mcp
 }
 ```
 
-부팅이 0.5~1초 빠릅니다. 새 버전은 `npm install -g korean-privacy-law-mcp` 로 수동 업데이트.
+저장 → Claude Desktop **완전 종료 → 재실행**.
 
-**소스에서 직접 빌드 (개발자):**
-
-```bash
-git clone https://github.com/scvcoder/korean-privacy-law-mcp.git
-cd korean-privacy-law-mcp
-npm install
-npm run build
-```
-
-설정 파일에서 절대경로로 지정:
-
-```json
-{
-  "mcpServers": {
-    "korean-privacy-law": {
-      "command": "node",
-      "args": ["/절대경로/korean-privacy-law-mcp/dist/index.js"],
-      "env": {
-        "LAW_OC": "your-api-key-here"
-      }
-    }
-  }
-}
-```
-
-또는 프로젝트 루트의 `.env` 파일에 `LAW_OC=...` 작성하면 자동 로드 — `env` 블록 생략 가능.
-
-앱을 재시작하면 완료!
+새 버전 출시 시 `npm install -g korean-privacy-law-mcp` 로 수동 업데이트 필요 (방법 1 은 npx 가 자동 반영).
 
 ### API 키 전달 방법 정리
 
@@ -209,11 +195,10 @@ npm run build
 
 | 방법 | 사용법 | 용도 |
 |------|--------|------|
-| URL 에 포함 | 주소 끝에 `?oc=내키` | 원격 서버 (방법 1·2) — 가장 간편 |
+| URL 에 포함 | 주소 끝에 `?oc=내키` | 원격 서버 (방법 2) — 가장 간편 |
 | HTTP 헤더 | `apikey: 내키` 또는 `x-law-oc: 내키` | 원격 서버 — 프로그래밍 연동 |
-| 설정 파일 env 블록 | `"env": { "LAW_OC": "내키" }` | 로컬 설치 (방법 3) 표준 |
+| 설정 파일 env 블록 | `"env": { "LAW_OC": "내키" }` | 로컬 설치 (방법 1·3) 표준 |
 | 셸 환경변수 | `export LAW_OC=내키` (~/.zshrc 등) | 시스템 전역 적용 |
-| `.env` 파일 | 프로젝트 루트에 `LAW_OC=내키` | 소스 빌드 — 자동 로드 |
 
 ---
 
