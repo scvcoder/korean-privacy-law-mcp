@@ -209,7 +209,6 @@ export async function runSetup(): Promise<void> {
     console.log(
       `  ${c.dim}발급(무료, 1분): https://open.law.go.kr/LSO/openApi/guideResult.do${c.reset}`
     );
-    console.log(`  ${c.dim}IP/도메인 등록은 비워두는 것을 권장 — 어디서든 호출 가능${c.reset}`);
     console.log();
     let apiKey = "";
     while (!apiKey) {
