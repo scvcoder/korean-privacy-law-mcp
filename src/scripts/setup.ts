@@ -143,7 +143,7 @@ function printBanner(): void {
   console.log();
   console.log(`  ${c.bold}${c.cyan}Korean Privacy Law MCP — Setup Wizard${c.reset}`);
   console.log(
-    `  ${c.dim}한국 개인정보보호법(PIPA) 전문 MCP — 법제처 31 + PIPC 인덱스 2 + RAG 3 + 검증 1 = 37개 도구${c.reset}`
+    `  ${c.dim}한국 개인정보보호법(PIPA) 전문 MCP — 법제처 자료와 개인정보포털 자료의 연계 활용${c.reset}`
   );
   console.log();
   console.log(`  ${c.dim}${"━".repeat(64)}${c.reset}`);
