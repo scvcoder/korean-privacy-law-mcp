@@ -81,7 +81,7 @@
 - **로컬 MCP 서버 사용 시** (방법 1·3) — Node.js 설치 필요 (**Node.js 20 이상**)
   → 설치는 귀찮지만 안정적 답변 + 속도 빠름
 - **원격 MCP 서버 사용 시** (방법 2 — Claude.ai 웹) — Node.js 불필요
-  → 하지만 cold start 가 느릴 수 있음
+  → 하지만 속도가 느릴 수 있음
 
 **macOS:**
 ```bash
@@ -158,13 +158,11 @@ https://claude.ai/ 에서 커스텀 커넥터 추가.
 
 **도구 활성화 (중요)**: 등록한 커넥터 "구성" 클릭 → 도구 목록에서 **모든 도구를 "항상 사용"** 으로 설정. 매번 승인 없이 AI 가 바로 호출 가능.
 
-> ⚠️ **주의사항**: Claude Desktop 에서는 커스텀 커넥터로 원격 등록 시 동작 중 오류가 발생합니다 ([anthropics/claude-ai-mcp#211](https://github.com/anthropics/claude-ai-mcp/issues/211) — "Tool result could not be submitted" 배너). Claude Desktop 은 반드시 [방법 1](#method-1) 로 추가하세요.
-
-> Hugging Face 원격 서버는 운영자(scvcoder) 가 무료로 제공하는 베스트 에포트 서비스 — 동작 보장 없음.
+> ⚠️ **주의사항**: Claude Desktop 에서는 커스텀 커넥터로 추가 시 동작 중 오류가 발생합니다. Claude Desktop 은 반드시 [방법 1](#method-1) 로 추가해야 합니다.
 
 ### 방법 3: Claude Desktop 에 수동 설치 (npm, 안정적)
 
-방법 1 의 `npx` 가 매번 npm 캐시를 확인하는 게 신경 쓰이거나 부팅을 0.5~1초 더 빠르게 하고 싶다면, 글로벌 설치 후 명령을 직접 호출하는 방식.
+방법 1 의 `npx` 설치 시 로컬에 설치한 것과 유사함. `npx` 설치하기 싫고 `npm` 으로 설치하고 싶다면 아래 명령어로 설치 후 설정 파일을 수동으로 수정.
 
 ```bash
 npm install -g korean-privacy-law-mcp
@@ -187,7 +185,7 @@ npm install -g korean-privacy-law-mcp
 
 저장 → Claude Desktop **완전 종료 → 재실행**.
 
-새 버전 출시 시 `npm install -g korean-privacy-law-mcp` 로 수동 업데이트 필요 (방법 1 은 npx 가 자동 반영).
+npm 최신 버전 설치 명령어로 갱신.
 
 ### API 키 전달 방법 정리
 
