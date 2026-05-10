@@ -47,7 +47,7 @@ describe("search_privacy_guides — doc_type 필터", () => {
     expect(text).toContain("고정형 영상정보처리기기");
   }, 15_000);
 
-  it("doc_type=sectoral → 분야별 안내서만 (신규 246청크)", async () => {
+  it("doc_type=sectoral → 분야별 안내서만 (8개 편 전체 476청크)", async () => {
     const r = await searchPrivacyGuides.handler(
       searchPrivacyGuides.inputSchema.parse({
         query: "의료기관",

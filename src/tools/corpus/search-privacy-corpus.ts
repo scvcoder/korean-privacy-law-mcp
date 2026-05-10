@@ -61,7 +61,7 @@ function chunkLine(idx: number, r: CorpusSearchResult): string {
 export const searchPrivacyCorpus: Tool<typeof inputSchema> = {
   name: "search_privacy_corpus",
   description:
-    "PIPC 공식 가이드 4종(질의응답·소상공인·CCTV·분야별 안내서) + privacy.go.kr 상담사례 1,745건 통합 BM25 검색 (총 2,202 청크, Contextual Retrieval 적용). " +
+    "PIPC 공식 가이드 4종(질의응답·소상공인·CCTV·분야별 안내서 8개 편 전체) + privacy.go.kr 상담사례 1,745건 통합 BM25 검색 (총 2,432 청크, Contextual Retrieval 적용). " +
     "법제처 API가 못 가진 PIPC 실무 자료가 차별화 — 정의 사례·상담 회신·업종별 적용 안내. " +
     "LLM 첫 진입에 가장 자연스러운 도구. source_type=guide/case로 분리 검색도 가능. " +
     "응답에 PIPC attribution 자동 첨부 (pipc-attribution 라이선스). " +

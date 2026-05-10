@@ -104,7 +104,7 @@ YYYYMMDD 8자리. 그 시점에 시행 중이던 본문 또는 그 시점의 인
 | 데이터 | TTL | 저장 위치 |
 |---|---|---|
 | `lsAbrv` 약칭 사전 (2,668건) | 24h | 모듈 내 메모리 |
-| Layer C 코퍼스 BM25 인덱스 (2,202 청크) | 부팅 시 1회 빌드 | 메모리 (lazy singleton) |
+| Layer C 코퍼스 BM25 인덱스 (2,432 청크) | 부팅 시 1회 빌드 | 메모리 (lazy singleton) |
 | 법제처 일반 응답 | 캐시 없음 | 매 요청 fresh |
 
 ---
@@ -199,7 +199,7 @@ PIPC 가 직접 게시한 표·portal list 만 인덱스화 (큐레이션 0). �
 | 도구 | 주요 파라미터 | 설명 |
 |---|---|---|
 | `search_privacy_corpus` | `query` · `display`=5 · `source_type`=all (`guide`\|`case`\|`all`) | 가이드 + 상담사례 통합 (LLM 첫 진입에 가장 자연스러움). |
-| `search_privacy_guides` | `query` · `doc_type`=all · `display` | PIPC 공식 가이드 4종. `doc_type` qa(99) / small_business(41) / cctv(71) / sectoral(246) / all(457). |
+| `search_privacy_guides` | `query` · `doc_type`=all · `display` | PIPC 공식 가이드 4종. `doc_type` qa(99) / small_business(41) / cctv(71) / sectoral(476, 8개 편 전체) / all(687). |
 | `search_privacy_cases` | `query` · `category1?`·`category2?`·`category3?`·`year_range?` · `display` | 개인정보 포털 상담사례 1,745건. category 트리: 처리자(민간/공공) × 처리행위 × 분야. |
 
 ### 인용 조문 검증 (1)

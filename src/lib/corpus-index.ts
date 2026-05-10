@@ -2,7 +2,7 @@
  * Layer C — PIPC 코퍼스 BM25 인덱스 (lazy singleton).
  *
  * 부팅 시 즉시 로드하지 않고 첫 검색 호출에서 build → 이후 메모리 재사용.
- * 약 2,202 청크 (1,745 상담사례 + 457 가이드 청크).
+ * 약 2,432 청크 (1,745 상담사례 + 687 가이드 청크).
  *
  * Contextual Retrieval 적용: body + chunk_context 둘 다 색인 → 검색 정확도 ↑.
  *

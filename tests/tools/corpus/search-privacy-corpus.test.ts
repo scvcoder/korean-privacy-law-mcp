@@ -8,7 +8,7 @@ describe("search_privacy_corpus — 정의", () => {
   it("name·description", () => {
     expect(searchPrivacyCorpus.name).toBe("search_privacy_corpus");
     expect(searchPrivacyCorpus.description).toContain("PIPC");
-    expect(searchPrivacyCorpus.description).toContain("2,202");
+    expect(searchPrivacyCorpus.description).toContain("2,432");
   });
 
   it("스키마 — query 필수, source_type 기본 'all'", () => {

@@ -4,7 +4,7 @@
 
 ## 프로젝트 정체성
 
-- **차별화 축**: 개인정보 도메인 자체의 깊이. 특별법 우선 원칙, 시점 분기(정보통신망법→PIPA 흡수), 4계층 위임(법·시행령·시행규칙·PIPC 고시), PIPC 의결례 구조화, **PIPC 공식 RAG 코퍼스** 2,202 청크 (가이드 457 + 상담사례 1,745, Contextual Retrieval 적용), **4계층 환각 검증**.
+- **차별화 축**: 개인정보 도메인 자체의 깊이. 특별법 우선 원칙, 시점 분기(정보통신망법→PIPA 흡수), 4계층 위임(법·시행령·시행규칙·PIPC 고시), PIPC 의결례 구조화, **PIPC 공식 RAG 코퍼스** 2,432 청크 (가이드 687 + 상담사례 1,745, Contextual Retrieval 적용), **4계층 환각 검증**.
 - **메타 철학**: LLM-driven discovery. 깔끔한 primitive 와 derive 불가능한 메타지식 (PIPC 공식 출처 인덱스, RAG 코퍼스, 환각 검증) 만 제공. 게이트·매트릭스로 LLM 추론을 가두지 않는다.
 - **타깃**: 개인정보 보호 실무자 (CPO · 법무 · 컴플라이언스).
 
@@ -54,16 +54,16 @@ PIPC 가 직접 게시한 공식 표·portal list 만 인덱스화. 우리 큐�
 
 ### Layer C — RAG Corpus (3개)
 
-`data/hf_dataset/` 5개 jsonl → 2,202 청크 (Contextual Retrieval 적용). 부팅 시 BM25 인덱스 메모리 빌드 (한국어 토크나이저, prefix + fuzzy 0.2). 법제처 API 가 못 가진 실무 자료.
+`data/hf_dataset/` 5개 jsonl → 2,432 청크 (Contextual Retrieval 적용). 부팅 시 BM25 인덱스 메모리 빌드 (한국어 토크나이저, prefix + fuzzy 0.2). 법제처 API 가 못 가진 실무 자료.
 
 | 청크 분포 | 개수 |
 |---|---|
-| 분야별 개인정보 보호 안내서 (2024.12) | 246 |
+| 분야별 개인정보 보호 안내서 (2024.12) — 8개 편 전체 | 476 |
 | 개인정보 질의응답 모음집 (2025.12) | 99 |
 | 고정형 영상정보처리기기 설치·운영 안내서 (2024.12) | 71 |
 | 소상공인을 위한 개인정보 보호 핸드북 (2024.12) | 41 |
 | 개인정보 포털 상담사례 (privacy.go.kr) | 1,745 |
-| **합계** | **2,202** |
+| **합계** | **2,432** |
 
 - **`search_privacy_corpus`** — 가이드 + 사례 통합. LLM 첫 진입에 가장 자연스러운 도구
 - **`search_privacy_guides(doc_type?)`** — PIPC 공식 가이드 4종 (`doc_type` ∈ `qa, small_business, cctv, sectoral`)
@@ -112,7 +112,7 @@ Hard gate 아닌 **soft signaling**. 레이어별로 다르게 동작.
 - `citations.ts` — 인용 추출 시 30자 lookback regex (직전 법령명 역추적), 원숫자(①②③) 항번호 파싱 (법제처 API quirk), 조·항·호·목 파싱: "제15조제1항제2호" → `{조:15, 항:1, 호:2}`
 - `aliases.ts` — `PRIVACY_ALIASES` 17 entries (개보법·정통망법·신정법·위치정보법·통비법·정보공개법·전자정부법 등). `search_law`·`get_law_history`·`get_annexes`·`get_law_abbreviations` fallback 에서 자동 적용. 법제처 lsAbrv 사전이 도메인 약칭 거의 미수록 (`정통망법` 등 통용 약칭 미등록, PIPA 자체도 사전 부재) 이라 보완 역할.
 - `compact.ts` — PIPC 의결문 본문 계단식 축약: 앞 800자 + 중략 + 뒤 400자 (의결문 평균 1만자+)
-- `corpus-index.ts` — lazy singleton, 5 jsonl → 2,202 청크 BM25 인덱스 (한국어 토크나이저, prefix + fuzzy 0.2)
+- `corpus-index.ts` — lazy singleton, 5 jsonl → 2,432 청크 BM25 인덱스 (한국어 토크나이저, prefix + fuzzy 0.2)
 - `external-links.ts` — 정규 URL + PIPC attribution 자동 생성
 - `not-found.ts` — `[NOT_FOUND]` / `[NOT_FOUND_SCOPE]` 표준 마커
 - `suggestions.ts` — 응답 끝 다음 도구 후보 생성
@@ -173,7 +173,8 @@ src/
 data/
   related_laws.jsonl             Layer B+ 데이터 (sectoral_related_laws + portal_corpus)
   related_laws.flat.backup.jsonl 백업
-  hf_dataset/                    Layer C 코퍼스 (jsonl 5종, 2,202 청크)
+  hf_dataset/                    Layer C 코퍼스 (jsonl 5종, 2,432 청크 — v1.2)
+    CHANGELOG.md                 데이터셋 버전 기록 (v1.0 → v1.2)
     LICENSE.md                   pipc-attribution
     README.md
     개인정보_질의응답_모음집(2025.12.).jsonl
