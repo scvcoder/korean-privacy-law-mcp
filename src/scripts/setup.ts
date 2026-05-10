@@ -237,7 +237,7 @@ export async function runSetup(): Promise<void> {
       `  ${c.cyan}2${c.reset}) ${c.white}원격 모드${c.reset}    ${c.dim}— 운영자 HF Space 사용 (${REMOTE_URL})${c.reset}`
     );
     console.log(
-      `     ${c.dim}즉시 37개 도구 사용 (best-effort, cold start 가능)${c.reset}`
+      `     ${c.dim}원격지에서 실행  - 약간느림${c.reset}`
     );
     console.log();
     let modeInput = "";
