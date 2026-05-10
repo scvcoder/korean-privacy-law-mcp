@@ -378,7 +378,6 @@ function printComplete(mode: InstallMode): void {
       method === "npx"
         ? `npx ${NPM_PACKAGE}@latest setup`
         : `npm install -g ${NPM_PACKAGE}@latest`;
-    console.log(`  ${c.dim}로컬 모드 — RAG 코퍼스 (2,432 청크) 가 패키지에 번들되어 별도 다운로드 불필요.${c.reset}`);
     console.log(`  ${c.dim}최신 버전으로 갱신: ${c.bold}${upgradeCmd}${c.reset}`);
     console.log();
   } else {
