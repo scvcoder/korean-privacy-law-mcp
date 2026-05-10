@@ -154,8 +154,12 @@ vitest                       테스트
 
 ```
 src/
-  index.ts                       진입점 (.env 로드 → stdio 서버 시작)
+  index.ts                       진입점 (서브커맨드 분기: setup / 기본=stdio 서버)
   server.ts                      MCP 서버 부트스트랩 (ListTools/CallTool 핸들러)
+  http.ts                        HTTP Streamable 진입점 (HF Space 배포용)
+  scripts/
+    setup.ts                     인터랙티브 설치 마법사 (npx korean-privacy-law-mcp setup)
+    uninstall.ts                 클라이언트 설정 + npx 캐시 일괄 정리 (기본 No prompt)
   client/
     law-api-client.ts            법제처 fetcher (retry · OC 키 마스킹 · display=100 강제)
     xml-parse.ts                 fast-xml-parser wrapper

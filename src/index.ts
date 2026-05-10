@@ -13,6 +13,25 @@ import { createServer, SERVER_NAME, SERVER_VERSION } from "./server.js";
 import { ALL_TOOLS } from "./tools/registry.js";
 
 async function main(): Promise<void> {
+  const args = process.argv.slice(2);
+
+  // setup 서브커맨드: npx korean-privacy-law-mcp setup
+  // (npm publish 전에는 node dist/index.js setup 으로 호출)
+  if (args[0] === "setup") {
+    const { runSetup } = await import("./scripts/setup.js");
+    await runSetup();
+    return;
+  }
+
+  // uninstall 서브커맨드: 클라이언트 설정 + npx 캐시 일괄 정리
+  // 예: npx korean-privacy-law-mcp@latest uninstall
+  //     korean-privacy-law-mcp uninstall   (글로벌 설치)
+  if (args[0] === "uninstall") {
+    const { runUninstall } = await import("./scripts/uninstall.js");
+    await runUninstall();
+    return;
+  }
+
   // 1순위: cwd/.env (개발 시: `npm run dev` 프로젝트 루트에서)
   loadEnv();
   // 2순위: 스크립트 디렉터리 기준 ../.env

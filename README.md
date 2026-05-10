@@ -112,32 +112,28 @@ npx --version
 
 <a id="method-1"></a>
 
-### ⭐ 방법 1: Claude Desktop 자동 설치 (npx, 안정적, 권장)
+### ⭐ 방법 1: Claude Desktop / Cursor / Windsurf — `npx` 자동 설정 (안정적, 권장)
 
 > [!IMPORTANT]
-> Claude Desktop 설정 파일에 아래 한 블록만 추가하면 끝.
+> 설치는 이 한 줄로 끝.
 >
-> **설정 파일 위치**:
-> - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-> - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
->
-> ```json
-> {
->   "mcpServers": {
->     "korean-privacy-law": {
->       "command": "npx",
->       "args": ["-y", "korean-privacy-law-mcp"],
->       "env": {
->         "LAW_OC": "your-api-key-here"
->       }
->     }
->   }
-> }
+> ```bash
+> npx korean-privacy-law-mcp setup
 > ```
->
-> 저장 → Claude Desktop **완전 종료 (Cmd+Q / Alt+F4, 창 닫기 X) → 재실행**.
 
-`npx -y` 가 매번 npm 캐시를 확인해 새 버전이 출시되면 자동 적용. 별도 업데이트 명령 불필요. Cursor / Windsurf / VS Code MCP 클라이언트도 같은 JSON 형식 — 각자의 설정 파일 위치만 다름.
+설치 마법사가 차례로:
+
+- **API 키 입력** — 사전 준비 1 에서 발급한 키
+- **운영 모드 선택** — 로컬 (권장) / 원격 중 선택
+- **클라이언트 선택** — Claude Desktop / Cursor / Windsurf / VS Code / Claude Code (다중 선택 가능, 감지된 항목 자동 디폴트)
+
+저장 후 클라이언트 **완전 재시작** 해야 적용됨.
+
+> **참고 — 그 외 옵션**:
+>
+> - 마법사 도중 클라이언트 선택에서 `0` 입력 → JSON 만 출력하고 사용자가 직접 설정 파일 편집
+> - 새 버전 갱신: `npx korean-privacy-law-mcp@latest setup` (마법사 재실행) 또는 npx 가 자동 적용
+> - 제거: `npx korean-privacy-law-mcp uninstall` — 클라이언트 설정 + npx 캐시 일괄 정리 (기본 No prompt 으로 실수 방지)
 
 ### ⭐ 방법 2: https://claude.ai/ 웹에서 바로 사용 (간편함)
 

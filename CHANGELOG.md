@@ -9,7 +9,27 @@
 
 ## [0.8.1] - 2026-05-10
 
-> **HF 코퍼스 v1.2 동기화 + 설치 안내 정비**: 분야별 개인정보 보호 안내서가 8개 편 전체 청킹 완료되어 RAG 코퍼스가 2,202 → 2,432 청크로 확장. Claude Desktop 사용자 안내도 mcp-remote 브릿지 포함하여 별도 섹션으로 정리.
+> **HF 코퍼스 v1.2 동기화 + 설치/제거 마법사 도입 + 설치 안내 정비**: 분야별 개인정보 보호 안내서가 8개 편 전체 청킹 완료되어 RAG 코퍼스가 2,202 → 2,432 청크로 확장. `npx korean-privacy-law-mcp setup` 한 줄로 API 키 입력 → 운영 모드 → MCP 클라이언트 설정 자동 등록까지 마치는 인터랙티브 마법사 신설. 짝궁으로 `uninstall` 도 함께.
+
+### Added
+
+- **`setup` 서브커맨드 신설** ([src/scripts/setup.ts](./src/scripts/setup.ts)) — 사용 예: `npx korean-privacy-law-mcp setup`. alio 의 setup wizard 패턴을 차용하되 ALIO 데이터 fetch 단계 제거 (RAG 코퍼스가 npm 패키지에 번들).
+
+  3단계 흐름:
+  1. **API 키 (필수)** — 법제처 OPEN API 인증키 입력. 빈 값이면 빨간 경고 + 재요청 (Ctrl+C 로만 종료)
+  2. **운영 모드** — 로컬 stdio (권장, 빌드 자동 감지) / 원격 HF Space 중 선택. `[기본=1]` 디폴트, 1·2 외 입력 거부
+  3. **클라이언트 다중 선택** — Claude Desktop / Cursor / Windsurf / VS Code / Claude Code 중 다중 선택. 감지된 항목 자동 디폴트 (`[기본=감지된 1,3]`), `^\d+$` + range check 로 잘못된 토큰 거부 (어느 토큰이 invalid 인지 표시). `0` 입력 시 manual JSON 출력 (escape hatch)
+
+  안전장치: Claude Desktop 은 streamable-HTTP 직접 등록 시 [anthropics/claude-ai-mcp#211](https://github.com/anthropics/claude-ai-mcp/issues/211) 버그 회피용 `mcp-remote` 브릿지 자동 적용. 다른 클라이언트는 `url` 직접 등록.
+
+- **`uninstall` 서브커맨드 신설** ([src/scripts/uninstall.ts](./src/scripts/uninstall.ts)) — 사용 예: `npx korean-privacy-law-mcp uninstall`.
+
+  동작:
+  1. **검사** — 모든 MCP 클라이언트 설정 파일에서 `korean-privacy-law` 항목 발견 여부 + 우리 패키지가 들어있는 모든 npx 캐시 (`~/.npm/_npx/*/`) + 회수 가능 사이즈 표시
+  2. **확인 prompt** — 기본 `[y/N]`, 실수 방지로 No 가 default
+  3. **제거 실행** — 클라이언트 설정에서 `korean-privacy-law` 키만 삭제 (다른 MCP 서버는 보존), npx 캐시 디렉터리 통째 삭제 (단, 자기 자신이 실행 중인 캐시는 OS 가 사용 중이라 제외 → 안내 출력)
+  4. **수동 정리 안내** — 현재 캐시 / 글로벌 설치 / `LAW_OC` 환경변수
+- **`src/index.ts` 서브커맨드 라우팅 추가** — `args[0] === "setup"` / `"uninstall"` 분기. 기본 동작 (stdio 서버) 은 그대로.
 
 ### Changed
 
