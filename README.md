@@ -334,7 +334,9 @@ AI 가 답변에서 인용한 법 조문이 *실제로 존재하는지*, 또는 
 | 문서 | 설명 |
 |------|------|
 | [`README.md`](./README.md) | 본 문서 |
+| [`CHANGELOG.md`](./CHANGELOG.md) | 코드 버전별 변경 이력 |
 | [`docs/API.md`](./docs/API.md) | 37개 도구 상세 레퍼런스 (이름·파라미터·예시) |
+| [`data/hf_dataset/CHANGELOG.md`](./data/hf_dataset/CHANGELOG.md) | RAG 코퍼스 데이터셋 버전 이력 (HF `scvcoder/korean-privacy-law-corpus`) |
 | [`LICENSE`](./LICENSE) | MIT |
 | [`data/hf_dataset/LICENSE.md`](./data/hf_dataset/LICENSE.md) | RAG 데이터의 원자료 출처 표시 |
 
