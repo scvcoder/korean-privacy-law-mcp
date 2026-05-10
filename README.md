@@ -131,9 +131,8 @@ npx --version
 
 > **참고 — 그 외 옵션**:
 >
-> - 마법사 도중 클라이언트 선택에서 `0` 입력 → JSON 만 출력하고 사용자가 직접 설정 파일 편집
-> - 새 버전 갱신: `npx korean-privacy-law-mcp@latest setup` (마법사 재실행) 또는 npx 가 자동 적용
-> - 제거: `npx korean-privacy-law-mcp uninstall` — 클라이언트 설정 + npx 캐시 일괄 정리 (기본 No prompt 으로 실수 방지)
+> - 새 버전 갱신: `npx korean-privacy-law-mcp@latest setup` (마법사 재실행)
+> - 제거: `npx korean-privacy-law-mcp uninstall` — 클라이언트 설정 + npx 캐시 일괄 정리
 
 ### ⭐ 방법 2: https://claude.ai/ 웹에서 바로 사용 (간편함)
 
