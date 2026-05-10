@@ -315,6 +315,21 @@ export async function runSetup(): Promise<void> {
         );
         continue;
       }
+      // 감지되지 않은 클라이언트 차단 — 설치 흔적이 없는데 config 만 만들면
+      // 사용자 PC 에 의미 없는 파일이 생성됨. 해당 클라이언트가 실제 설치되고
+      // 한 번이라도 실행되어 config 디렉터리/파일이 만들어진 후에 setup 권장.
+      const undetected = parsed.filter((p) => !detectedFlags[p.idx]);
+      if (undetected.length > 0) {
+        console.log(
+          `  ${c.red}!${c.reset} 감지되지 않은 클라이언트: ${undetected
+            .map((p) => `${p.token} (${clients[p.idx].name})`)
+            .join(", ")}.`
+        );
+        console.log(
+          `    ${c.dim}해당 클라이언트가 설치되고 최소 한 번 실행되어 있어야 합니다. 수동 설정은 0 입력.${c.reset}`
+        );
+        continue;
+      }
       indices = parsed.map((p) => p.idx);
       if (indices.length === 0) {
         console.log(`  ${c.red}!${c.reset} 유효한 번호가 없습니다. 다시 입력하세요.`);
