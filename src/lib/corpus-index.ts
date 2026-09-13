@@ -2,7 +2,7 @@
  * Layer C — PIPC 코퍼스 BM25 인덱스 (lazy singleton).
  *
  * 부팅 시 즉시 로드하지 않고 첫 검색 호출에서 build → 이후 메모리 재사용.
- * 약 2,432 청크 (1,745 상담사례 + 687 가이드 청크).
+ * 약 2,699 청크 (1,745 상담사례 + 954 가이드 청크).
  *
  * Contextual Retrieval 적용: body + chunk_context 둘 다 색인 → 검색 정확도 ↑.
  *
@@ -51,6 +51,9 @@ const CORPUS_FILES = [
   "소상공인을_위한_개인정보 보호_핸드북(2024.12).jsonl",
   "고정형 영상정보처리기기_설치_운영_안내서(2024.12).jsonl",
   "분야별_개인정보_보호_안내서(2024.12).jsonl",
+  "가명정보_처리_가이드라인(2026.3).jsonl",
+  "개인정보_처리방침_작성지침(2026.4).jsonl",
+  "공공_AX_프라이버시_보호_안내서(2026.7).jsonl",
   "개인정보포털_상담사례.jsonl",
 ];
 
@@ -60,6 +63,9 @@ export const DOC_TYPE_ALIAS: Record<string, string> = {
   small_business: "소상공인을_위한_개인정보_보호_핸드북",
   cctv: "고정형_영상정보처리기기_설치_운영_안내서",
   sectoral: "분야별_개인정보_보호_안내서",
+  pseudonym: "가명정보_처리_가이드라인",
+  privacy_policy: "개인정보_처리방침_작성지침",
+  public_ax: "공공_AX_프라이버시_보호_안내서",
 };
 
 interface CorpusIndex {

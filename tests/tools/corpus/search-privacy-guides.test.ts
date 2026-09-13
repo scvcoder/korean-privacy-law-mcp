@@ -7,7 +7,8 @@ const client = new LawApiClient({ apiKey: "unused-corpus-only" });
 describe("search_privacy_guides — 정의", () => {
   it("name·description", () => {
     expect(searchPrivacyGuides.name).toBe("search_privacy_guides");
-    expect(searchPrivacyGuides.description).toContain("4종");
+    expect(searchPrivacyGuides.description).toContain("7종");
+    expect(searchPrivacyGuides.description).toContain("pseudonym");
     expect(searchPrivacyGuides.description).toContain("sectoral");
   });
 
@@ -18,8 +19,17 @@ describe("search_privacy_guides — 정의", () => {
     expect(parsed.display).toBe(5);
   });
 
-  it("doc_type enum — 5개 값 (qa/small_business/cctv/sectoral/all)", () => {
-    for (const t of ["qa", "small_business", "cctv", "sectoral", "all"]) {
+  it("doc_type enum — 8개 값 (qa/small_business/cctv/sectoral/pseudonym/privacy_policy/public_ax/all)", () => {
+    for (const t of [
+      "qa",
+      "small_business",
+      "cctv",
+      "sectoral",
+      "pseudonym",
+      "privacy_policy",
+      "public_ax",
+      "all",
+    ]) {
       expect(() =>
         searchPrivacyGuides.inputSchema.parse({ query: "x", doc_type: t })
       ).not.toThrow();
@@ -92,7 +102,52 @@ describe("search_privacy_guides — doc_type 필터", () => {
     expect(text).toContain("소상공인");
   }, 15_000);
 
-  it("doc_type=all → 4종 모두 검색 가능", async () => {
+  it("doc_type=pseudonym → 가명정보 처리 가이드라인만 (본권+별권 132청크)", async () => {
+    const r = await searchPrivacyGuides.handler(
+      searchPrivacyGuides.inputSchema.parse({
+        query: "결합전문기관 반출심사",
+        doc_type: "pseudonym",
+        display: 3,
+      }),
+      client
+    );
+    expect(r.isError).toBeFalsy();
+    const text = r.content[0]?.text ?? "";
+    expect(text).toContain("[pseudonym]");
+    expect(text).toContain("가명정보 처리 가이드라인");
+  }, 15_000);
+
+  it("doc_type=privacy_policy → 처리방침 작성지침만", async () => {
+    const r = await searchPrivacyGuides.handler(
+      searchPrivacyGuides.inputSchema.parse({
+        query: "국외 이전 처리방침 기재",
+        doc_type: "privacy_policy",
+        display: 3,
+      }),
+      client
+    );
+    expect(r.isError).toBeFalsy();
+    const text = r.content[0]?.text ?? "";
+    expect(text).toContain("[privacy_policy]");
+    expect(text).toContain("개인정보 처리방침 작성지침");
+  }, 15_000);
+
+  it("doc_type=public_ax → 공공 AX 안내서만", async () => {
+    const r = await searchPrivacyGuides.handler(
+      searchPrivacyGuides.inputSchema.parse({
+        query: "사전적정성 검토 적법근거",
+        doc_type: "public_ax",
+        display: 3,
+      }),
+      client
+    );
+    expect(r.isError).toBeFalsy();
+    const text = r.content[0]?.text ?? "";
+    expect(text).toContain("[public_ax]");
+    expect(text).toContain("공공 AX 프라이버시 보호 안내서");
+  }, 15_000);
+
+  it("doc_type=all → 7종 모두 검색 가능", async () => {
     const r = await searchPrivacyGuides.handler(
       searchPrivacyGuides.inputSchema.parse({
         query: "개인정보",

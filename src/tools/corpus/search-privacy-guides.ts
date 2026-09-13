@@ -10,20 +10,29 @@ import { formatToolError } from "../../lib/errors.js";
 import { appendSuggestions } from "../../lib/suggestions.js";
 import { formatPipcAttribution } from "../../lib/external-links.js";
 
-const DOC_TYPES = ["qa", "small_business", "cctv", "sectoral", "all"] as const;
+const DOC_TYPES = [
+  "qa",
+  "small_business",
+  "cctv",
+  "sectoral",
+  "pseudonym",
+  "privacy_policy",
+  "public_ax",
+  "all",
+] as const;
 
 const inputSchema = z.object({
   query: z
     .string()
     .min(1)
     .describe(
-      "검색 키워드 (예: '가명정보 결합', 'CCTV 화각', '소상공인 동의', '의료기관 적용')"
+      "검색 키워드 (예: '가명정보 결합', 'CCTV 화각', '소상공인 동의', '의료기관 적용', '처리방침 국외이전', '공공 AX 적법근거')"
     ),
   doc_type: z
     .enum(DOC_TYPES)
     .default("all")
     .describe(
-      "가이드 종류 — qa(질의응답 99청크) / small_business(소상공인 41) / cctv(CCTV 안내서 71) / sectoral(분야별 안내서 476, 8개 편 전체) / all(전체 4종 687)"
+      "가이드 종류 — qa(질의응답 99청크) / small_business(소상공인 41) / cctv(CCTV 안내서 71) / sectoral(분야별 안내서 476, 8개 편 전체) / pseudonym(가명정보 처리 가이드라인 2026.3 본권+별권 132) / privacy_policy(개인정보 처리방침 작성지침 2026.4 96) / public_ax(공공 AX 프라이버시 보호 안내서 2026.7 39) / all(전체 7종 954)"
     ),
   display: z
     .number()
@@ -61,9 +70,12 @@ function guideLine(idx: number, r: CorpusSearchResult): string {
 export const searchPrivacyGuides: Tool<typeof inputSchema> = {
   name: "search_privacy_guides",
   description:
-    "PIPC 공식 가이드 4종 BM25 검색 (Contextual Retrieval, 총 687청크). " +
-    "doc_type ∈ {qa, small_business, cctv, sectoral, all}. " +
-    "qa=질의응답 모음집(2025.12, 99) / small_business=소상공인 핸드북(2024.12, 41) / cctv=고정형 영상정보처리기기 안내서(2024.12, 71) / sectoral=분야별 안내서(2024.12, 476, 8개 편 전체: 인사노무·사회복지시설·의료기관·약국·학원교습소·통계작성·공공기관·온라인경품). " +
+    "PIPC 공식 가이드 7종 BM25 검색 (Contextual Retrieval, 총 954청크). " +
+    "doc_type ∈ {qa, small_business, cctv, sectoral, pseudonym, privacy_policy, public_ax, all}. " +
+    "qa=질의응답 모음집(2025.12, 99) / small_business=소상공인 핸드북(2024.12, 41) / cctv=고정형 영상정보처리기기 안내서(2024.12, 71) / sectoral=분야별 안내서(2024.12, 476, 8개 편 전체: 인사노무·사회복지시설·의료기관·약국·학원교습소·통계작성·공공기관·온라인경품) / " +
+    "pseudonym=가명정보 처리 가이드라인(2026.3, 132: 본권 제도 안내—특례·5단계 절차·위험도 판단·비정형데이터 기준·Q&A + 별권 실무—결합·반출 절차·안전조치·가명처리 기술·서식 10종·운영문서·위험도 판단 예시·AI 시나리오 7종) / " +
+    "privacy_policy=개인정보 처리방침 작성지침(2026.4, 96: 기재사항 24개 항목별 작성법·예시, 공개 방법·라벨링, 생성형 AI 서비스·아동·공공기관·소상공인·업종별 부록) / " +
+    "public_ax=공공 AX 프라이버시 보호 안내서(2026.7, 39: 공공기관 AI 전환 단계별·유형별 점검, 적법근거 해석, 사전적정성 검토 사례). " +
     "법제처 API가 못 가진 PIPC 실무 안내가 차별화. " +
     "응답에 PIPC attribution + 페이지 정보 자동 첨부 (pipc-attribution 라이선스). " +
     "다음: search_privacy_cases로 실제 상담 사례, search_law로 관련 법조문.",
