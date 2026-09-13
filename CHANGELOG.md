@@ -7,6 +7,44 @@
 
 ---
 
+## [0.9.0] - 2026-09-13
+
+> **2026년 PIPC 신규 가이드 3종 RAG 코퍼스 편입 (v1.3)**: 가명정보 처리 가이드라인(2026.3)·개인정보 처리방침 작성지침(2026.4)·공공 AX 프라이버시 보호 안내서(2026.7) 를 청킹해 Layer C 코퍼스가 2,432 → **2,699 청크** (가이드 687 → 954) 로 확장. `search_privacy_guides` 의 `doc_type` 이 4종 → 7종. 기존 데이터는 원출처 대조 결과 변경 없음.
+
+### Added
+
+- **RAG 코퍼스 신규 가이드 3종** ([data/hf_dataset/](./data/hf_dataset/), 데이터셋 v1.3) — 모두 절·항목 단위 청킹 + Contextual Retrieval `chunk_context` 적용.
+  - `가명정보_처리_가이드라인(2026.3).jsonl` — **132청크** (본권 제도 안내편 46 + 별권 제도 실무편 86). 가명정보 특례·5단계 가명처리 절차·표준화된 위험도 판단(저·중·고)·비정형데이터 가명처리 기준·Q&A / 결합·반출 절차·안전성 확보조치·가명처리 기술 및 기법·서식 10종·내부관리계획·위탁계약·처리방침 작성 예시·위험도 판단 예시 7건·AI 활용 시나리오 8건·유의사례. `pages` 는 `본권 p.N` / `별권 p.N` 으로 구분.
+  - `개인정보_처리방침_작성지침(2026.4).jsonl` — **96청크**. 기재사항 24개 항목별 작성 방법·작성 예시·잘못 작성된 사례, 공개 방법(누리집·사업장·간이형), 주요 개인정보 처리 표시(라벨링), 부록 1~9 (생성형 AI 서비스 처리방침 · 아동용 · 공공기관용 · 소상공인용 · 업종별 알기 쉬운 처리방침 · 브라우저/단말기 차단 방법).
+  - `공공_AX_프라이버시_보호_안내서(2026.7).jsonl` — **39청크**. 공공기관 AI 전환 단계별(사전 설계·개발 구축·적용 관리)·유형별(기초업무 보조·정보 연계분석추천·선별판단) 점검, 적법근거 해석, 보호위원회 사전적정성 검토 사례 6건, 기관별 역할·헬프데스크.
+- **`search_privacy_guides` `doc_type` 3종 추가** ([src/tools/corpus/search-privacy-guides.ts](./src/tools/corpus/search-privacy-guides.ts)) — `pseudonym` / `privacy_policy` / `public_ax`. enum 5 → 8 (`all` 포함), description 에 각 가이드 범위·청크 수 명시.
+- **테스트** — `doc_type` enum 8개 검증 + 신규 3종 각각의 필터 동작 테스트 ([tests/tools/corpus/search-privacy-guides.test.ts](./tests/tools/corpus/search-privacy-guides.test.ts)).
+
+### Changed
+
+- **코퍼스 로더** ([src/lib/corpus-index.ts](./src/lib/corpus-index.ts)) — `CORPUS_FILES` 5 → 8, `DOC_TYPE_ALIAS` 4 → 7. 부팅 시 BM25 인덱스 2,699 청크.
+- **`search_privacy_corpus` description** — 가이드 7종·2,699 청크로 갱신.
+- **문서** — README(배지·특징·도구 표), CLAUDE.md(청크 분포 표·디렉터리), docs/API.md, huggingface/README.md 의 청크 수·가이드 목록 갱신. 데이터셋 README/CHANGELOG 에 v1.3 항목 추가.
+
+### Verified (데이터 현행화 점검, 2026-09-13)
+
+- 개인정보 포털 관련 법령(contsNo=116) 12건 · 관련 행정규칙(contsNo=117) 23건 — 변경 없음.
+- 개인정보 포털 상담사례 — 총 1,745건 · 최신 2025-09-02 (nttNo 313) 로 코퍼스와 동일, 신규 없음.
+- 기존 가이드 4종(질의응답 2025.12 · 소상공인 핸드북 2024.12 · CCTV 안내서 2024.12 · 분야별 안내서 2024.12) — PIPC 자료실 기준 여전히 최신판. HF 데이터셋 푸시 시 기존 jsonl 5개 바이트 단위 동일 확인.
+- 업스트림 HF 데이터셋 `scvcoder/korean-privacy-law-corpus` 가 v1.2 로 로컬과 동일했으므로 신규분은 원출처 PDF 에서 직접 청킹.
+
+### Deployment
+
+- HF 데이터셋 `scvcoder/korean-privacy-law-corpus` v1.3 태그 푸시.
+- HF Space `scvcoder-korean-privacy-law-mcp.hf.space` — v0.0.1(5월 빌드) → v0.8.3 → **v0.9.0** 순차 재배포. 라이브 `doc_type: pseudonym` 검색 확인.
+
+### Notes
+
+- 「개인정보 처리방침 표준(안)」(2026.2) 3종(공인중개사·노인복지관·여행업)은 서식 위주라 청킹 제외 — 작성지침 부록 5 의 업종별 알기 쉬운 처리방침 예시가 같은 내용을 다룸.
+- 별권 제7·8장의 서식 작성 예시 청크 8개는 표가 길어 3,000~3,550자 (기존 최대 2,766자). BM25 검색·400자 발췌에는 영향 없음.
+
+---
+
 ## [0.8.3] - 2026-05-10
 
 > **버전 표기 동기화 + setup 완료 메시지 정리**: `SERVER_VERSION` 이 0.0.1 로 고정돼 있던 stale 이슈를 package.json 동적 로드로 해결. setup 완료 메시지에 실제 설치 버전 노출.
